@@ -1,0 +1,45 @@
+services:
+  train:
+    build:
+      context: .
+      args:
+        INSTALL_MODE: train
+    image: hybridil:train
+    working_dir: /workspace/hybridil
+    volumes:
+      - .:/workspace/hybridil
+    stdin_open: true
+    tty: true
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities:
+                - gpu
+
+  eval:
+    build:
+      context: .
+      args:
+        INSTALL_MODE: eval
+    image: hybridil:eval
+    working_dir: /workspace/hybridil
+    network_mode: host
+    privileged: true
+    environment:
+      FLEXIV_RDK_PATH: /opt/flexiv_rdk/lib_py
+    volumes:
+      - .:/workspace/hybridil
+      - ${FLEXIV_RDK_DIR:-/path/to/flexiv_rdk}:/opt/flexiv_rdk:ro
+    stdin_open: true
+    tty: true
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities:
+                - gpu

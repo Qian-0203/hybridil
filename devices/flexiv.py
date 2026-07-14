@@ -1,6 +1,9 @@
+import os
 import sys
-# TODO: hardcode the path to the flexivrdk
-sys.path.insert(0, '/home/ubuntu/my_code/flexiv_rdk/lib_py') # flexiv_rdk 0.9.1
+
+# flexiv_rdk 0.9.1 is distributed separately by Flexiv. Set FLEXIV_RDK_PATH
+# in Docker or on the host to the directory containing the flexivrdk module.
+sys.path.insert(0, os.environ.get("FLEXIV_RDK_PATH", "/home/ubuntu/my_code/flexiv_rdk/lib_py"))
 import flexivrdk
 import time
 import numpy as np

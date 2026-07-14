@@ -37,6 +37,27 @@ pip install -r eval_requirements.txt
 # download flexiv rdk v0.9.1 from https://github.com/flexivrobotics/flexiv_rdk
 ```
 
+### Docker
+The default Docker image installs the training environment with Python 3.8.
+
+```bash
+docker build -t hybridil:train .
+docker run --rm -it --gpus all -v "$PWD:/workspace/hybridil" hybridil:train
+```
+
+For real robot evaluation, build with the evaluation dependencies. Flexiv RDK
+v0.9.1 is not bundled; mount it and set `FLEXIV_RDK_PATH` to the directory that
+contains the `flexivrdk` Python module.
+
+```bash
+docker build --build-arg INSTALL_MODE=eval -t hybridil:eval .
+docker run --rm -it --network host --privileged \
+  -e FLEXIV_RDK_PATH=/opt/flexiv_rdk/lib_py \
+  -v /path/to/flexiv_rdk:/opt/flexiv_rdk \
+  -v "$PWD:/workspace/hybridil" \
+  hybridil:eval
+```
+
 ## Data Preparation
 Please refer to [ForceCapture](https://github.com/ForceMimic/forcecapture) to collect and process the data. You can download our processed dataset from [Google Drive](https://drive.google.com/drive/folders/1sKqOj9tO-luddM8XIaJvTFbRSEZet7C3?usp=sharing).
 
